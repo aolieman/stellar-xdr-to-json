@@ -129,14 +129,14 @@ function extrapolateFromXdr(input, type) {
         if (typeof object.toString === "function") {
             return object.toString();
         }
-        throw new Error("Internal laboratory bug: Encountered value type in XDR viewer that does not have a toString method");
+        throw new Error("Not implemented: Encountered value type in XDR that does not have a toString method");
     }
     let xdrObject;
     try {
         xdrObject = stellar_sdk_1.xdr[type].fromXDR(input, "base64");
     }
     catch (error) {
-        throw new Error("Input XDR could not be parsed");
+        throw new Error(`Input XDR could not be parsed as ${type}`);
     }
     let tree = [{}];
     buildTreeFromObject(xdrObject, tree[0], type);

@@ -11,6 +11,6 @@
       "declaration": true,
       "strict": false
     },
-    "include": ["src"],
+    "include": ["src", "xdr2json"],
     "exclude": ["build", "node_modules"]
   }

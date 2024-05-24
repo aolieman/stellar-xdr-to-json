@@ -1,11 +1,10 @@
-// This takes a base64 encoded xdr object with it's type, and turns it into an
+// This takes a base64 encoded xdr object with its type, and turns it into an
 // object with more detailed information suitable for use in the tree view.
 
 // This code was originally taken from the XDR Viewer <https://github.com/stellar/xdr-viewer>
 // by the Stellar Development Foundation (SDF) under Apache-2.0.
 // It includes later modifications made by the SDF as part of the Stellar Laboratory
-// <https://github.com/stellar/laboratory> that have not yet been made available under
-// an open-source license.
+// <https://github.com/stellar/laboratory> which have an ambiguous licensing status.
 
 // Node.js adaptation by Alex Olieman <https://keybase.io/alioli>
 
@@ -220,7 +219,7 @@ export default function extrapolateFromXdr(input, type) {
     }
 
     throw new Error(
-      "Internal laboratory bug: Encountered value type in XDR viewer that does not have a toString method",
+      "Not implemented: Encountered value type in XDR that does not have a toString method",
     );
   }
 
@@ -228,7 +227,7 @@ export default function extrapolateFromXdr(input, type) {
   try {
     xdrObject = xdr[type].fromXDR(input, "base64");
   } catch (error) {
-    throw new Error("Input XDR could not be parsed");
+    throw new Error(`Input XDR could not be parsed as ${type}`);
   }
 
   let tree = [{}];

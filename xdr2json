@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+const { Command } = require('commander');
+const extrapolateFromXdr = require('./build/treeParser').default
+
+const program = new Command();
+
+program
+    .name('xdr2json')
+    .description('Render a Stellar XDR object as JSON')
+    .version('0.1.0');
+
+program
+    .argument('<xdr-string>', 'Base64-encoded XDR object')
+    .requiredOption('-t, --type <TYPE>', 'An XDR type known to the Stellar SDK')
+    .action((xdrStr, options, command) => {
+        const tree = extrapolateFromXdr(xdrStr, options.type);
+        console.log(JSON.stringify(tree));
+    });
+    
+program.showHelpAfterError();
+program.parse();
