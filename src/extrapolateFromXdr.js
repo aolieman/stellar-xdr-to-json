@@ -1,21 +1,19 @@
-// This code originally taken from the XDR Viewer https://github.com/stellar/xdr-viewer
-// by Stellar Development Foundation under Apache-2.0.
-
-// This turns a base64 encoded xdr object with it's type, and turns it into an
+// This takes a base64 encoded xdr object with it's type, and turns it into an
 // object with more detailed information suitable for use in the tree view.
 
-// Values can be one of three types:
-// - undefined
-// - string: string values that appear as just plain text
-// - object: typed values always with a type and value `{type: 'code', value: 'Foo();'}`
+// This code was originally taken from the XDR Viewer <https://github.com/stellar/xdr-viewer>
+// by the Stellar Development Foundation (SDF) under Apache-2.0.
+// It includes later modifications made by the SDF as part of the Stellar Laboratory
+// <https://github.com/stellar/laboratory> that have not yet been made available under
+// an open-source license.
+
+// Node.js adaptation by Alex Olieman <https://keybase.io/alioli>
 
 import {
   xdr,
   StrKey,
   Keypair,
   Operation,
-  scValToNative,
-  nativeToScVal,
 } from "@stellar/stellar-sdk";
 import isArray from "lodash/isArray";
 import isString from "lodash/isString";
@@ -23,6 +21,7 @@ import functionsIn from "lodash/functionsIn";
 import includes from "lodash/includes";
 import without from "lodash/without";
 import { scValByType } from "helpers/sorobanXdrUtils";
+import { Buffer } from 'node:buffer';
 
 export default function extrapolateFromXdr(input, type) {
   // TODO: Check to see if type exists
@@ -86,7 +85,7 @@ export default function extrapolateFromXdr(input, type) {
       return false;
     }
     // node buffer
-    if (object && object._isBuffer) {
+    if (object && Buffer.isBuffer(object)) {
       return false;
     }
     var functions = functionsIn(object);
@@ -156,17 +155,17 @@ export default function extrapolateFromXdr(input, type) {
       // byte 34:                                                                            # 54### 55
       // byte 35:                                                                                      ### 56###
       //
-      let hintBytes = new Buffer(object, "base64");
-      let partialPublicKey = Buffer.concat([new Buffer(28).fill(0), hintBytes]);
+      let hintBytes = Buffer.from(object, "base64");
+      let partialPublicKey = Buffer.concat([Buffer.alloc(28).fill(0), hintBytes]);
       let keypair = new Keypair({
         type: "ed25519",
         publicKey: partialPublicKey,
       });
       let partialPublicKeyString =
         "G" +
-        new Buffer(46).fill("_").toString() +
+        Buffer.alloc(46).fill("_").toString() +
         keypair.publicKey().substr(47, 5) +
-        new Buffer(4).fill("_").toString();
+        Buffer.alloc(4).fill("_").toString();
       return { type: "code", value: partialPublicKeyString };
     }
 
@@ -176,9 +175,9 @@ export default function extrapolateFromXdr(input, type) {
     }
 
     if (
-      name === "assetCode" ||
-      name === "assetCode4" ||
-      name === "assetCode12"
+      name === "assetCode"
+      || name === "assetCode4"
+      || name === "assetCode12"
     ) {
       return object.toString();
     }
@@ -191,19 +190,19 @@ export default function extrapolateFromXdr(input, type) {
       return object.toString();
     }
 
-    if (name === "durability") {
-      return JSON.stringify(object);
+    if (
+      name === "durability"
+      || name === "type"
+      || name === "map"
+    ) {
+      return object;
     }
 
-    if (name === "type") {
-      return JSON.stringify(object);
-    }
-
-    if (object && object._isBuffer) {
+    if (object && Buffer.isBuffer(object)) {
       return {
         type: "code",
         raw: object,
-        value: new Buffer(object).toString("base64"),
+        value: Buffer.from(object).toString("base64"),
       };
     }
 

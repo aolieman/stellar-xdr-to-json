@@ -16,7 +16,7 @@ export const scValByType = (scVal: xdr.ScVal) => {
     }
 
     case xdr.ScValType.scvBytes(): {
-      return JSON.stringify(scVal.bytes().toJSON().data);
+      return scVal.bytes().toJSON().data;
     }
 
     case xdr.ScValType.scvContractInstance(): {
@@ -52,11 +52,13 @@ export const scValByType = (scVal: xdr.ScVal) => {
     }
 
     case xdr.ScValType.scvMap(): {
-      return JSON.stringify(
-        scValToNative(scVal),
-        (_, val) => (typeof val === "bigint" ? val.toString() : val),
-        2,
-      );
+      const native = scValToNative(scVal);
+      Object.keys(native).forEach((key) => {
+        if(typeof native[key]  === "bigint") {
+          native[key] = native[key].toString();
+        }
+      });
+      return native;
     }
 
     case xdr.ScValType.scvString():
