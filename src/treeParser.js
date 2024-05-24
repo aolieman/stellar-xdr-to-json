@@ -20,7 +20,7 @@ import isString from "lodash/isString";
 import functionsIn from "lodash/functionsIn";
 import includes from "lodash/includes";
 import without from "lodash/without";
-import { scValByType } from "helpers/sorobanXdrUtils";
+import { scValByType } from "./sorobanXdrUtils";
 import { Buffer } from 'node:buffer';
 
 export default function extrapolateFromXdr(input, type) {

@@ -1,0 +1,16 @@
+{
+    "extends": "@stellar/tsconfig",
+    "compilerOptions": {
+      "baseUrl": "src/",
+      "outDir": "./build/",
+      "target": "es2022",
+      "lib": ["esnext"],
+      "module": "CommonJS",
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "declaration": true,
+      "strict": false
+    },
+    "include": ["src"],
+    "exclude": ["build", "node_modules"]
+  }
