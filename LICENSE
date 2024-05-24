@@ -1,0 +1,9 @@
+This repository contains code that was taken from the Stellar Laboratory <https://github.com/stellar/laboratory>.
+
+Part of the original code was licensed under Apache 2.0, but recent additions haven't yet been
+made available under an open source license. We're waiting for the Stellar Development Foundation
+to make a decision on licensing these files for reuse.
+
+Until this matter is resolved, this program should be considered to be for experimental use only.
+DO NOT include any part of it in your own project, unless you have received permission to do so
+from all copyright holders.
